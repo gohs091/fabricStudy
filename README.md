@@ -3,7 +3,7 @@ Hyperledger fabric study
 
 ## Level DB Package 를 Go 언어로 실습해보자.
 
-```GO
+```
 
 type TestStruct struct {
         Title string
