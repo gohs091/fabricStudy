@@ -8,8 +8,8 @@ Hyperledger fabric study
 ```go
 import (
         "encoding/json"
-        // Json type 을 byte[] 로 직렬화(Serialization : Json -> byte[]), 역직렬화(Deserialization : byte[] -> Json)
-        // 을 사용하기 위해 필요한 패키지 
+        //직렬화(Serialization : Json -> byte[]), 역직렬화(Deserialization : byte[] -> Json)
+        //을 사용하기 위해 필요한 패키지 
         
         "fmt"
         // 표준 입출력 함수들을 사용하기 위해 필요한 패키지
@@ -28,6 +28,5 @@ type TestStruct struct {
         Title string
         Value int
         ID string
-
 }
  
