@@ -29,4 +29,9 @@ type TestStruct struct {
         Value int
         ID string
 }
- 
+
+
+```go
+
+        testData := TestStruct struct {
+        
