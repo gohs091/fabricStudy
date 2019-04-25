@@ -10,4 +10,5 @@ type TestStruct struct {
         Value int
         ID int
 
+}
 ```
