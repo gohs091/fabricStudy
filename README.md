@@ -38,3 +38,16 @@ type TestStruct struct {
 go get github.com/syndtr/goleveldb/leveldb
 ```
 ##### leveldb package 를 사용하기 위해 해당 패키지를 다운받는다.
+
+
+```go
+data := TestStruct{"gohs091", "LeveldbTest", 1}
+// levelDB에 넣을 데이터를 만들고
+
+db, err := leveldb.OpenFile("path/to/db", nil)
+// 
+
+err = db.Put([]byte("key"), []byte("value"), nil)
+
+
+
