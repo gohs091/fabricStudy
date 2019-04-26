@@ -25,13 +25,11 @@ import (
 ```go
 
 type TestStruct struct {
-        Title string
-        Value int
-        ID string
-}
+         ID string
+         Title string
+         Value int
+      }
 
 
-```go
-
-        testData := TestStruct struct {
-        
+```
+##### 간단하게 ID와 Title 그리고 Value 를 갖는 structure 를 정의했다.
