@@ -33,3 +33,8 @@ type TestStruct struct {
 
 ```
 ##### 간단하게 ID와 Title 그리고 Value 를 갖는 structure 를 정의했다.
+
+```c
+go get github.com/syndtr/goleveldb/leveldb
+```
+##### leveldb package 를 사용하기 위해 해당 패키지를 다운받는다.
