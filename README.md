@@ -89,3 +89,33 @@ services:
 
   
 ```
+
+``` yaml
+# configtx.yaml 
+# SampleDevModeKafka 에 Broker 정보 넣어줘야함
+
+ SampleDevModeKafka:
+        <<: *ChannelDefaults
+        Capabilities:
+            <<: *ChannelCapabilities
+        Orderer:
+            <<: *OrdererDefaults
+            OrdererType: kafka
+            Kafka:
+                Brokers:
+                - kafka1.example.com:9092
+                - kafka2.example.com:9092
+            Organizations:
+            - *OrdererOrg
+            Capabilities:
+                <<: *OrdererCapabilities
+        Application:
+            <<: *ApplicationDefaults
+            Organizations:
+            - <<: *OrdererOrg
+        Consortiums:
+            SampleConsortium:
+                Organizations:
+                - *Org1
+                - *Org2
+```
