@@ -8,6 +8,7 @@ CONSENSUS_TYPE="solo" -> CONSENSUS_TYPE="kafka"
 
 ```yaml
 # kafka 와 관련된 설정 파일은 docker-compose-kafka.yaml 
+# 3대의 zookeeper node 와 2개의 kafka broker 를 가진 cluster를 구성
 
 version: '2'
 
@@ -42,4 +43,49 @@ services:
     networks:
     - byfn
 
+
+ kafka1.example.com:
+    container_name: kafka1.example.com
+    image: hyperledger/fabric-kafka:$IMAGE_TAG
+    depends_on:
+    - zookeeper1.example.com
+    - zookeeper2.example.com
+    - zookeeper3.example.com
+    environment:
+      - KAFKA_BROKER_ID=1
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1.example.com:2181,zookeeper2.example.com:2181,zookeeper3.example.com:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka.example.com:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=2
+      - KAFKA_MESSAGE_MAX_BYTES=1048576
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_MIN_INSYNC_REPLICAS=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
+    networks:
+    - byfn
+
+
+  kafka2.example.com:
+    container_name: kafka2.example.com
+    image: hyperledger/fabric-kafka:$IMAGE_TAG
+    depends_on:
+    - zookeeper1.example.com
+    - zookeeper2.example.com
+    - zookeeper3.example.com
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1.example.com:2181,zookeeper2.example.com:2181,zookeeper3.example.com:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka.example.com:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=2
+      - KAFKA_MESSAGE_MAX_BYTES=1048576
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_MIN_INSYNC_REPLICAS=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
+    networks:
+    - byfn
+
+  
 ```
