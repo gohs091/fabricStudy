@@ -1,9 +1,6 @@
 ###### $() syntax is token level, so the meaning of the dollar sign depends on the token it's in  the expression $(command) is a modern synonym for `command` which stands for command substitution;  it means, run command and put its output here. so  echo "Today is $(date). A fine day."  will run the date command and include its output in the argument to echo  By contrast, $(variable} is just a disambiguation mechanism, so you can say ${var}text when you mean, the contents of the variable var, followed by text (as opposed to $vartext which means, the contents of the variable vartext ).
 ```shell
 
-
-
-
 function generateCerts() {
   
   which cryptogen
@@ -97,9 +94,7 @@ function replacePrivateKey() {
  fi
  
  # 계속 같은 패턴 
- 
- 
- 
+
  다음으로는 
  
  function networkUp() {
@@ -135,14 +130,51 @@ fucntion checkPrereqs() {
   fi
 done
 }
+```
+
+```shell
+if [ "${IF_COUCHDB}" == "couchdb" ]; then
+    if [ "$CONSENSUS_TYPE" == "kafka" ]; then
+      IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_KAFKA -f $COMPOSE_FILE_COUCH up -d 2>&1
+      docker ps -a
+    elif  [ "$CONSENSUS_TYPE" == "etcdraft" ]; then
+      IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_RAFT2 -f $COMPOSE_FILE_COUCH up -d 2>&1
+      docker ps -a
+    else
+      IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_COUCH up -d 2>&1
+      docker ps -a
+    fi
+  else
+    if [ "$CONSENSUS_TYPE" == "kafka" ]; then
+      IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_KAFKA up -d 2>&1
+      docker ps -a
+    elif  [ "$CONSENSUS_TYPE" == "etcdraft" ]; then
+      IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE -f $COMPOSE_FILE_RAFT2 up -d 2>&1
+      docker ps -a
+    else
+      IMAGE_TAG=$IMAGETAG docker-compose -f $COMPOSE_FILE up -d 2>&1
+      docker ps -a
+    fi
+  fi
 
 
 
-The while 
+#compose 파일을 실행시키고 
+
+docker exec cli scripts/script.sh
+#cli로 들어가서 스크립트를 실행시킨다.
+```
+
+# scripts/script.sh 에 들어가면 자주 보던 문구를 볼 수 있다.
+
+echo
+echo " ____    _____      _      ____    _____ "
+echo "/ ___|  |_   _|    / \    |  _ \  |_   _|"
+echo "\___ \    | |     / _ \   | |_) |   | |  "
+echo " ___) |   | |    / ___ \  |  _ <    | |  "
+echo "|____/    |_|   /_/   \_\ |_| \_\   |_|  "
+echo
+echo "Build your first network (BYFN) end-to-end test"
+echo
 
 
-
-byfn.sh generate
-byfn.sh up -c mychannel -s couchdb
-byfn.sh up -c mychannel -s couchdb -i 1.4.0
-byfn.sh 
