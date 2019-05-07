@@ -1,4 +1,4 @@
-###### $() syntax is token level, so the meaning of the dollar sign depends on the token it's in  the expression $(command) is a modern synonym for `command` which stands for command substitution;  it means, run command and put its output here. so  echo "Today is $(date). A fine day."  will run the date command and include its output in the argument to echo  By contrast, $(variable} is just a disambiguation mechanism, so you can say ${var}text when you mean, the contents of the variable var, followed by text (as opposed to $vartext which means, the contents of the variable vartext ).
+ㅁㅁ###### $() syntax is token level, so the meaning of the dollar sign depends on the token it's in  the expression $(command) is a modern synonym for `command` which stands for command substitution;  it means, run command and put its output here. so  echo "Today is $(date). A fine day."  will run the date command and include its output in the argument to echo  By contrast, $(variable} is just a disambiguation mechanism, so you can say ${var}text when you mean, the contents of the variable var, followed by text (as opposed to $vartext which means, the contents of the variable vartext ).
 ```shell
 
 function generateCerts() {
@@ -178,3 +178,139 @@ echo "Build your first network (BYFN) end-to-end test"
 echo
 ```
 
+```shell
+
+## Create channel
+echo "Creating channel..."
+createChannel
+
+## Join all the peers to the channel
+echo "Having all peers join the channel..."
+joinChannel
+
+## Set the anchor peers for each org in the channel
+echo "Updating anchor peers for org1..."
+updateAnchorPeers 0 1
+echo "Updating anchor peers for org2..."
+updateAnchorPeers 0 2
+
+## Install chaincode on peer0.org1 and peer0.org2
+echo "Installing chaincode on peer0.org1..."
+installChaincode 0 1
+echo "Install chaincode on peer0.org2..."
+installChaincode 0 2
+
+# Instantiate chaincode on peer0.org2
+echo "Instantiating chaincode on peer0.org2..."
+instantiateChaincode 0 2
+
+# Query chaincode on peer0.org1
+echo "Querying chaincode on peer0.org1..."
+chaincodeQuery 0 1 100
+
+# Invoke chaincode on peer0.org1 and peer0.org2
+echo "Sending invoke transaction on peer0.org1 peer0.org2..."
+chaincodeInvoke 0 1 0 2
+
+## Install chaincode on peer1.org2
+echo "Installing chaincode on peer1.org2..."
+installChaincode 1 2
+
+# Query on chaincode on peer1.org2, check if the result is 90
+echo "Querying chaincode on peer1.org2..."
+chaincodeQuery 1 2 90
+
+```
+
+```shell
+
+#createChannel
+peer channel create -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/channel.tx >&log.txt
+#joinChannel
+for org in 1 2; do
+  for peer in 0 1; do
+    joinChannelWithRetry $peer $org
+    
+#Util.sh 에 있는 joinChannelWithRetry 
+
+joinChannelWithRetry() {
+  PEER=$1
+  ORG=$2
+  setGlobals $PEER $ORG 
+  peer channel join -b $CHANNEL_NAME.block >&log.txt
+}
+
+setGlobals() {
+  PEER=$1
+  ORG=$2
+  if [ $ORG -eq 1 ]; then
+    CORE_PEER_LOCALMSPID="Org1MSP"
+    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG1_CA
+    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+    if [ $PEER -eq 0 ]; then
+      CORE_PEER_ADDRESS=peer0.org1.example.com:7051
+    else
+      CORE_PEER_ADDRESS=peer1.org1.example.com:8051
+    fi
+  elif [ $ORG -eq 2 ]; then
+    CORE_PEER_LOCALMSPID="Org2MSP"
+    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG2_CA
+    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+    if [ $PEER -eq 0 ]; then
+      CORE_PEER_ADDRESS=peer0.org2.example.com:9051
+    else
+      CORE_PEER_ADDRESS=peer1.org2.example.com:10051
+    fi
+
+  elif [ $ORG -eq 3 ]; then
+    CORE_PEER_LOCALMSPID="Org3MSP"
+    CORE_PEER_TLS_ROOTCERT_FILE=$PEER0_ORG3_CA
+    CORE_PEER_MSPCONFIGPATH=/opt/gopath/src/github.com/hyperledger/fabric/peer/crypto/peerOrganizations/org3.example.com/users/Admin@org3.example.com/msp
+    if [ $PEER -eq 0 ]; then
+      CORE_PEER_ADDRESS=peer0.org3.example.com:11051
+    else
+      CORE_PEER_ADDRESS=peer1.org3.example.com:12051
+    fi
+  else
+    echo "================== ERROR !!! ORG Unknown =================="
+  fi
+
+  if [ "$VERBOSE" == "true" ]; then
+    env | grep CORE
+  fi
+}
+
+updateAnchorPeers() {
+  PEER=$1
+  ORG=$2
+  setGlobals $PEER $ORG
+  peer channel update -o orderer.example.com:7050 -c $CHANNEL_NAME -f ./channel-artifacts/${CORE_PEER_LOCALMSPID)anchors.tx >&log.txt
+  }
+  
+installChaincode() {
+  PEER=$1
+  ORG=$2
+  setGlobals $PEER $ORG
+peer chaincode instlal -n mycc -v ${VERSION} -l ${LANGUAGE} -p ${CC_SRC_PATH} >&log.txt
+}
+
+instantiateChanicode() { 
+  PEER=$1
+  ORG=$2
+  setGlobals $PEER $ORG
+  peer chaincode instantiate -o orderer.example.com:7050 -C $CHANNEL_NAME -n mycc -l ${LANGUAGE} -v ${VERSION} -c '{"Args":["init","a","100","b","200"]}' -P "AND ('Org1MSP.peer','Org2MSP.peer')" >&log.txt
+  }
+  
+  
+ chaincodeQuery() {
+ PEER=$1
+ ORG=$2
+ setGlobals $PEER $ORG
+ peer chaincode query -C $CHANNEL_NAME -n mycc -c '{"Args":["query","a"]}' >&log.txt
+ }
+ 
+ chaincodeInvoke(){
+ 
+  
+ 
+  
