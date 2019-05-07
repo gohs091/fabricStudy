@@ -166,7 +166,7 @@ docker exec cli scripts/script.sh
 ```
 
 # scripts/script.sh 에 들어가면 자주 보던 문구를 볼 수 있다.
-
+```shell
 echo
 echo " ____    _____      _      ____    _____ "
 echo "/ ___|  |_   _|    / \    |  _ \  |_   _|"
@@ -176,5 +176,5 @@ echo "|____/    |_|   /_/   \_\ |_| \_\   |_|  "
 echo
 echo "Build your first network (BYFN) end-to-end test"
 echo
-
+```
 
