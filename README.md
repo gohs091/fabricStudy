@@ -1,3 +1,10 @@
+# 카프카 주키퍼 간단 요약
+
+###### Kafka = Messaging System
+###### Zookeeper = Menaging System
+
+
+
 
 #### kafka 를 사용하기 위해서는 설정파일들을 바꿔줘야 한다.  
 ```shell
@@ -27,6 +34,7 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_TICK_TIME: 2000
       ZOOKEEPER_SERVERS: server.1=0.0.0.0:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
+      # [다른서버 연결 포트] : [리더 선출 포트]
     networks:
     - byfn
 
