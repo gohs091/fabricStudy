@@ -86,3 +86,9 @@ kafka1.example.com:
     - byfn
 
 ```
+
+
+./byfn.sh generate
+./byfn.sh up -o kafka
+
+로 실행가능
