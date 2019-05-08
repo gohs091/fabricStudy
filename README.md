@@ -155,4 +155,131 @@ YAML에서는 데이터의 맨 앞에 '-'를 붙이면 배열을 나타낼 수 �
 services:
 webserver:
    image: ubuntu
+   
+만약 Dockerfile을 작성해놓고 빌드하여 베이스 이미지로 지정할 때는 
+
+services:
+   webserver:
+      build: . # . 은 커런트 디렉토리를 나타낸다.
+ 
+```
+
+## 컨테이너 안에서 명령 지정 command
+```shell
+command: /bin/bash
+```
+
+## 컨테이너 간 연결(links)
+```shell
+links:
+   - logserver
+```
+
+## 컨테이너 간 통신(ports/expose)
+```shell
+컨테이너가 공개하는 포트는 ports로 지정합니다. '호스트 머신의 포트 번호:컨테이너의 포트번호'을 지정하거나
+컨테이너의 포트 번호만 지정합니다. 또한 컨테이너의 포트 번호만 지정한 경우는 호스트 머신의 포트는 랜덤한 값으로 설정됩니다.
+
+ports:
+  - "3000"
+  - "8000:8000"
+  - "49100:22"
+  - "127.0.0.1:8001:8001"
+```
+
+## 서비스의 의존관계 정의(depends_on)
+```shell
+services:
+  webserver:
+    build:
+    depends_on:
+      - db
+      - redis
+  redis:
+     image: redis
+  db:
+     image: postgree
+```
+
+## 컨테이너 환경변수 지정(environment/env_file)
+```shell
+
+# 배열 형식으로 지정
+environment:
+  - HOGE=fuga
+  - FOO
+# 해시 형식으로 지정
+environment:
+  HOGE: fuga
+  FOO:
+  
+env_file: envfile
+```
+
+## 컨테이너 데이터 관리(volumes/volumes_from)
+
+```shell
+컨테이너에 볼륨을 마운트할 때는 volumes를 지정합니다.
+호스트 측에서 마운트할 경로를 지정하려면 호스트의 디렉토리 경로:컨테이너의 디렉토리 경로를 지정합니다.
+
+volumes:
+  - /var/lib/mysql
+  - cache/:/tmp/cache
+
+```
+
+
+## Docker Compose의 주요 서브 명령
+up 컨테이너 생성/시작
+ps 컨테이너 목록 표시
+logs 컨테이너 로그 출력
+run 컨테이너 실행
+start 컨테이너 시작
+stop 컨테이너 정지
+restart 컨테이너 재시작
+pause 컨테이너 일시 정지
+unpause 컨테이너 재개
+port 공개 포트 번호 표시
+config 구성 확인
+kill 실행 중인 컨테이너 강제 정지
+rm 컨테이너 삭제
+down 리소스 삭제
+
+# 여러 컨테이너 생성(up)
+
+```shell
+docker-compose up [옵션] [서비스명 .]
+
+
+#옵션
+-d 백그라운드에서 실행한다.
+--build 이미지를 빌드한다. 
+--no-build 이미지를 빌드하지 않는다.
+
+2개의 컨테이너를 시작하는 예
+
+version: '3.3'
+
+services:
+  server_a:
+    image: nginx
+    
+  server_b:
+    image: redis
+    
+
+```
+
+# 여러 컨테이너 확인(ps/logs)
+
+```shell
+컨테이너들의 목록을 표시할 때는 docker-compose ps 명령을 사용합니다.
+
+docker-compose ps
+# -q 옵션을 지정하면 컨테이너 ID만 표시됩니다.
+
+컨테이너의 로그를 확인하려면 docker-compose logs 명령을 사용합니다
+
+```
+
 
