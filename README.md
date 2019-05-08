@@ -45,5 +45,74 @@ ENTRYPOINT [실행하고 싶은 명령]
 ex) ENTRYPOINT ["nginx", "-g", "daemon off;"]
     ENTRYPOINT nginx -g 'daemon off';
 ENTRYPOINT 명령에서 지정한 명령은 docker container run 명령을 실행했을 때 실행된다.
+
+CMD 명령과의 차이는 docker container run 명령 실행 시의 동작에 있다.
+CMD 명령은 docker container run 명령 실행 시에 인수로 새로운 명령을 지정하면 지정한 명령을 우선 실행 시킨다.
+
+따라서 
+
+FROM Ubuntu:16.04
+ENTRYPOINT ["top"]
+CMD["-d","10"]
+
+라는 내용의 Dockerfile을 만들고
+
+docker container run -it sample
+docker container run -it sample -d 2 를 하면
+ENTRYPOINT 는 그대로 실행되지만 CMD 의 내용은 -d 2 로 변경되어 덮어 씌어진다.
+
+
 ```
 
+## ONBUILD
+```shell
+
+ONBUILD [실행하고 싶은 명령]
+Dockerfile로부터 생성한 이미지를 베이스 이미지로 한 다른 Dockerfile을 빌드할 때 실행하고 싶은 명령을 기술합니다.
+
+ex) FROM ubuntu:17.10
+    ONBUILD ADD site.tar /var/www/html/
+
+```
+
+## ENV
+```shell
+
+ENV [key] [value]
+ENV [key]=[value]
+
+환경변수 설정
+```
+
+## WORKDIR
+```shell
+
+WORKDIR [작업 디렉토리 경로]
+ex) WORKDIR /first
+    WORKDIR second
+    WORKDIR third
+    RUN ["pwd"]
+
+RUN,CMD,ENTRYPOINT,COPY,ADD 명령을 실행하기 위한 작업용 디렉토리를 지정
+디렉토리가 존재하지 않으면 새로 작성합니다.
+상대 경로를 지정한 경우는 이전 WORKDIR 명령의 경로에 대한 상대 경로가 됩니다.
+
+```
+
+## EXPOSE
+```shell
+
+EXPOSE <포트 번호>
+ex) EXPOSE 8080
+
+EXPOSE 명령은 Docker에게 실행 중인 컨테이너가 listen 하고 있는 네트워크를 알려줍니다.
+또한 docker container run 명령의 -p 옵션을 사용할 때 어떤 포트를 호스트에 공개할지를 정의합니다.
+
+```
+
+## ARG 
+```shell
+ARG <이름>[=기본값]
+ex) ARG YOURNAME="asa"
+build시에 --build-arg 옵션을 붙이면 값을 변경할 수 있습니다.
+```
