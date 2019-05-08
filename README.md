@@ -1,6 +1,6 @@
 # Dockerfile
 
-##Build
+## Build
 ```shell
 
 docker build -t [생성할 이미지명] : [태그명] [Dockerfile의 위치]
