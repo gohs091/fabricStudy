@@ -142,4 +142,17 @@ VOLUME ["/마운트 포인트"]
 ```
 
 
+# Docker-compose 
+
+## docker-compose.yml의 개요
+
+YAML : YAML은 구조화된 데이터를 표현하기 위한 데이터 포맷입니다. YAML은 Python과 같이 들여쓰기로 데이터의 계층 구조를 나타냅니다. 들여쓰기는 탭이 아니라 반각 스페이스를 사용합니다.
+YAML에서는 데이터의 맨 앞에 '-'를 붙이면 배열을 나타낼 수 있습니다. '-' 다음에는 반드시 반각 스페이스를 넣기 바랍니다.
+
+## 이미지 지정 image 
+
+```shell
+services:
+webserver:
+   image: ubuntu
 
