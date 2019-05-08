@@ -116,3 +116,30 @@ ARG <이름>[=기본값]
 ex) ARG YOURNAME="asa"
 build시에 --build-arg 옵션을 붙이면 값을 변경할 수 있습니다.
 ```
+
+## ADD
+```shell
+ADD <호스트의 파일 경로> <Docker 이미지의 파일 경로>
+ex) ADD host.html /docker_dir/
+```
+
+## COPY
+```shell
+COPY <호스트의 파일 경로> <Docker 이미지의 파일 경로>
+ADD 명령과 매우 비슷하지만 다른 점은 ADD 명령은 원격 파일의 다운로드나 아카이브의 압축 해제 등과 같은 기능을 갖고 있지만
+COPY 명령은 단순히 복사 처리만 합니다.
+```
+
+## VOLUME
+```shell
+VOLUME ["/마운트 포인트"]
+-v <컨테이너 디렉토리> ex) sudo docker run -i -t --name hello-volume -v /data ubuntu /bin/bash
+-v <호스트 디렉토리>:<컨테이너 디렉터리> ex) sudo docker run -it --name hello-volume1 -v /root/data:/data ubuntu /bin/bash
+
+데이터 볼륨 설정을 통해 컨테이너 끼리 혹은 호스트와 컨테이너가 데이터를 공유할 수 있다.
+
+
+```
+
+
+
