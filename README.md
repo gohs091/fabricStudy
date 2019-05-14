@@ -15,7 +15,7 @@ CONSENSUS_TYPE="solo" -> CONSENSUS_TYPE="kafka"
 
 ```yaml
 # kafka 와 관련된 설정 파일은 docker-compose-kafka.yaml 
-# 3대의 zookeeper node 와 1개의 broker 를 가진 kafka를 구성
+# 3대의 zookeeper node 와 2개의 broker 를 가진 kafka를 구성
     
 
 version: '2'
