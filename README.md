@@ -34,7 +34,6 @@ services:
       ZOOKEEPER_SERVER_ID: 1
       ZOOKEEPER_TICK_TIME: 2000
       ZOOKEEPER_SERVERS: server.1=0.0.0.0:2888:3888 server.2=zoo2:2888:3888 server.3=zoo3:2888:3888
-      # [다른서버 연결 포트] : [리더 선출 포트]
     networks:
     - byfn
 
@@ -55,6 +54,8 @@ services:
     container_name: zookeeper3.example.com
     image: hyperledger/fabric-zookeeper:$IMAGE_TAG
     hostname: zoo3
+    ports:
+      - 2183:2181
     environment:
       ZOOKEEPER_SERVER_ID: 3
       ZOOKEEPER_TICK_TIME: 2000
@@ -62,7 +63,7 @@ services:
     networks:
     - byfn
 
-kafka1.example.com:
+ kafka1.example.com:
     container_name: kafka1.example.com
     image: hyperledger/fabric-kafka:$IMAGE_TAG
     ports:
@@ -84,6 +85,30 @@ kafka1.example.com:
       - KAFKA_DEFAULT_REPLICATION_FACTOR=1
     networks:
     - byfn
+
+  kafka2.example.com:
+    container_name: kafka2.example.com
+    image: hyperledger/fabric-kafka:$IMAGE_TAG
+    ports:
+    - "9093:9092"
+    depends_on:
+    - zookeeper1.example.com
+    - zookeeper2.example.com
+    - zookeeper3.example.com
+    environment:
+      - KAFKA_BROKER_ID=2
+      - KAFKA_ZOOKEEPER_CONNECT=zookeeper1.example.com:2181,zookeeper2.example.com:2181,zookeeper3.example.com:2181
+      - KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://kafka2.example.com:9092
+      - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=2
+      - KAFKA_MESSAGE_MAX_BYTES=1048576
+      - KAFKA_REPLICA_FETCH_MAX_BYTES=1048576
+      - KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE=false
+      - KAFKA_LOG_RETENTION_MS=-1
+      - KAFKA_MIN_INSYNC_REPLICAS=1
+      - KAFKA_DEFAULT_REPLICATION_FACTOR=1
+    networks:
+    - byfn
+
 
 ```
 
